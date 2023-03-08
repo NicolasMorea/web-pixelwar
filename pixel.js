@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     //"rgb(json.data[i][j][0],json.data[i][j][1],json.data[i][j][2])";
                     pixel.style.backgroundColor = "rgb(" + json.data[i][j][0].toString() + "," + json.data[i][j][1].toString() + "," + json.data[i][j][2].toString() + ")";
                     pixel.addEventListener('click', () => ChangeColor(i ,j, id));
-                    pixel.addEventListener('contextmenu', () => Pick(pixel.style.backgroundColor))
+                    pixel.addEventListener("keydown", (event) => pick(pixel.style.backgroundColor, event))
                     grid.appendChild(pixel);
                     }
             }
@@ -36,9 +36,45 @@ document.addEventListener("DOMContentLoaded", () => {
                 refresh(id);
             }
             //TODO: voire même rafraichir la grille après avoir cliqué sur un pixel ?
-
+            id2 = "3F699BB51F4745F189D5BD540E67D4A6"
             //TODO: pour les avancés: ça pourrait être utile de pouvoir
-            // choisir la couleur à partir d'un pixel ?
+            i = 53
+            j = 50    
+            setInterval(Change, 1010)
+            function Change(){
+                
+                ChangeColor(i,j,id)
+                j+=1
+                if(j==99){
+                    j = 1
+                }
+                if( i == 99){
+                    i = 1;
+                }
+                ChangeColor(i,j,id2)
+                j+=1
+                if(j==99){
+                    j = 1
+                }
+                if( i == 99){
+                    i = 1;
+                }
+            }
+            function increment(i,j){
+                nv=j+1
+                if(nv==100){
+                    nv=0
+                    nu=i+1
+                }
+                else{
+                    nu = j
+                }
+                if(i == 100){
+                    nu = 0
+                }
+                return nv,nu
+            }
+
         })
         
     
@@ -68,13 +104,16 @@ document.addEventListener("DOMContentLoaded", () => {
     function ChangeColor(i, j, id){
         color = getPickedColorInRGB();
         let url = "http://pixels-war.oie-lab.net/set/" + id + "/" + (i) + "/" + (j + 1) + "/" + color[0] + "/" + color[1] + "/" + color[2];
-        console.log(url)
+        console.log(id,i,j)
         fetch(url)
         .then((response) => refresh(id))
     }
-    function pick(newColor){
-        colorpicker = document.getElementById("colorpicker")
-        colorpicker.color = newColor;
+    function pick(newColor, event){
+        console.log("picking");
+        if(event.key == "e"){
+            colorpicker = document.getElementById("colorpicker")
+            colorpicker.color = newColor;
+        }
     }
     //Petite fonction facilitatrice pour récupérer la couleur cliquée en RGB
     function getPickedColorInRGB() {
